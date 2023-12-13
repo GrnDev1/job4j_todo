@@ -20,7 +20,7 @@ public class HqlTaskRepository implements TaskRepository {
         try (Session session = sf.openSession()) {
             try {
                 session.beginTransaction();
-                result = session.createQuery("FROM Task ORDER BY created", Task.class).list();
+                result = session.createQuery("FROM Task ORDER BY id", Task.class).list();
                 session.getTransaction().commit();
             } catch (Exception e) {
                 session.getTransaction().rollback();
@@ -50,7 +50,7 @@ public class HqlTaskRepository implements TaskRepository {
         try (Session session = sf.openSession()) {
             try {
                 session.beginTransaction();
-                result = session.createQuery("FROM Task WHERE done = true ORDER BY created", Task.class).list();
+                result = session.createQuery("FROM Task WHERE done = true ORDER BY id", Task.class).list();
                 session.getTransaction().commit();
             } catch (Exception e) {
                 session.getTransaction().rollback();
@@ -65,7 +65,7 @@ public class HqlTaskRepository implements TaskRepository {
         try (Session session = sf.openSession()) {
             try {
                 session.beginTransaction();
-                result = session.createQuery("FROM Task WHERE done = false ORDER BY created", Task.class).list();
+                result = session.createQuery("FROM Task WHERE done = false ORDER BY id", Task.class).list();
                 session.getTransaction().commit();
             } catch (Exception e) {
                 session.getTransaction().rollback();
