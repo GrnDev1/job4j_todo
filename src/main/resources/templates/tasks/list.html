@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head th:insert="blocks/head :: head">
+    <title>Tasks</title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container mt-4">
+        <label for="tasks">Select tasks:</label>
+        <select id="tasks" name="tasks" onchange="redirectToPage()">
+            <option th:value="${key}" th:text="${key}"></option>
+            <option value="tasks" th:unless="${key eq 'All'}">All</option>
+            <option value="completed" th:unless="${key eq 'Completed'}">Completed</option>
+            <option value="new" th:unless="${key eq 'New'}">New</option>
+        </select>
+
+        <script>
+            function redirectToPage() {
+                var selectedTask = document.getElementById("tasks").value;
+                if (selectedTask === "tasks") {
+                    window.location.href = "/" + selectedTask;
+                }
+                if (selectedTask === "completed" || selectedTask === "new") {
+                    window.location.href = "/tasks/" + selectedTask;
+                }
+            }
+        </script>
+        <div class="card my-4 text-center">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width: 33%;">Status</th>
+                    <th style="width: 33%;">Title</th>
+                    <th style="width: 33%;">Creation date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task: ${tasks}">
+                    <td th:text="${task.isDone()}"></td>
+                    <td>
+                        <a th:text="${task.getTitle()}"
+                           th:href="@{/tasks/{taskId}(taskId=${task.getId()})}"> </a>
+                    </td>
+                    <td th:text="${task.getCreated()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-2">
+            <a class="btn btn-secondary w-100" th:href="@{/tasks/create}">+ Add task</a>
+        </div>
+    </div>
+</div>
+</body>
+<footer th:insert="blocks/footer :: footer"></footer>
+</html>

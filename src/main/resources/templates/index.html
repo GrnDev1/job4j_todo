@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head th:insert="blocks/head :: head">
+    <title>To Do List</title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container mt-4 text-center">
+        <div>
+            <img src="/photos/home.png" width="800" alt="No image"/><br><br>
+            <H2>Smart Task Management</H2>
+            <H5>This smart tool is designed to help you better manage your tasks</H5><br>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <a class="btn btn-primary btn-lg w-100 " th:href="@{/tasks}">Continue</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<footer th:insert="blocks/footer :: footer"></footer>
+</html>
