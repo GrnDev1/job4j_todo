@@ -16,15 +16,15 @@ import static java.util.Optional.empty;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class HqlTaskRepositoryTest {
-    private static SessionFactory sf;
     private static HqlTaskRepository taskRepository;
 
     @BeforeAll
     public static void initRepositories() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
-        sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        taskRepository = new HqlTaskRepository(sf);
+        SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        CrudRepository crudRepository = new CrudRepository(sf);
+        taskRepository = new HqlTaskRepository(crudRepository);
     }
 
     @AfterEach
@@ -38,7 +38,6 @@ class HqlTaskRepositoryTest {
     @Test
     public void whenSaveThenGetSame() {
         var task = new Task();
-        task.setId(1);
         task.setTitle("Task1");
         var savedTask = taskRepository.save(task);
         assertThat(savedTask).usingRecursiveComparison().isEqualTo(task);
@@ -47,10 +46,8 @@ class HqlTaskRepositoryTest {
     @Test
     public void whenSaveSeveralThenGetAll() {
         var task1 = new Task();
-        task1.setId(1);
         task1.setTitle("Task1");
         var task2 = new Task();
-        task2.setId(2);
         task2.setDone(true);
         var savedTask1 = taskRepository.save(task1);
         var savedTask2 = taskRepository.save(task2);
@@ -61,11 +58,9 @@ class HqlTaskRepositoryTest {
     @Test
     public void whenSaveSeveralThenGetDone() {
         var task1 = new Task();
-        task1.setId(1);
         task1.setTitle("Task1");
         task1.setDone(true);
         var task2 = new Task();
-        task2.setId(2);
         task2.setTitle("Task2");
         task2.setDone(true);
         var savedTask1 = taskRepository.save(task1);
@@ -77,10 +72,8 @@ class HqlTaskRepositoryTest {
     @Test
     public void whenSaveSeveralThenGetNew() {
         var task1 = new Task();
-        task1.setId(1);
         task1.setTitle("Task1");
         var task2 = new Task();
-        task2.setId(2);
         task2.setTitle("Task2");
         var savedTask1 = taskRepository.save(task1);
         var savedTask2 = taskRepository.save(task2);
@@ -97,7 +90,6 @@ class HqlTaskRepositoryTest {
     @Test
     public void whenDeleteThenGetEmptyOptional() {
         var task1 = new Task();
-        task1.setId(1);
         task1.setTitle("Task1");
         var savedTask1 = taskRepository.save(task1);
         var isDeleted = taskRepository.deleteById(savedTask1.getId());
@@ -109,7 +101,6 @@ class HqlTaskRepositoryTest {
     @Test
     public void whenUpdateThenGetUpdated() {
         var task1 = new Task();
-        task1.setId(1);
         task1.setTitle("Task1");
         var savedTask1 = taskRepository.save(task1);
         var task2 = new Task();

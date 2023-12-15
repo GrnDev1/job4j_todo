@@ -1,149 +1,82 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Repository
 @AllArgsConstructor
+@Slf4j
 public class HqlTaskRepository implements TaskRepository {
-    private final SessionFactory sf;
+    private final CrudRepository crudRepository;
 
     @Override
     public List<Task> findAll() {
-        List<Task> result = List.of();
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                result = session.createQuery("FROM Task ORDER BY id", Task.class).list();
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return result;
+        return crudRepository.query("FROM Task ORDER BY id", Task.class);
     }
 
     @Override
     public Optional<Task> findById(int id) {
-        Optional<Task> task = Optional.empty();
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                task = Optional.ofNullable(session.get(Task.class, id));
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return task;
+        return crudRepository.optional(
+                "from Task where id = :fId", Task.class,
+                Map.of("fId", id)
+        );
     }
 
     @Override
     public List<Task> findByDone() {
-        List<Task> result = List.of();
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                result = session.createQuery("FROM Task WHERE done = true ORDER BY id", Task.class).list();
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return result;
+        return crudRepository.query("FROM Task WHERE done = true ORDER BY id", Task.class);
     }
 
     @Override
     public List<Task> findByNew() {
-        List<Task> result = List.of();
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                result = session.createQuery("FROM Task WHERE done = false ORDER BY id", Task.class).list();
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return result;
+        return crudRepository.query("FROM Task WHERE done = false ORDER BY id", Task.class);
     }
 
     @Override
     public Task save(Task task) {
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                session.save(task);
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
+        crudRepository.run(session -> session.persist(task));
         return task;
     }
 
     @Override
     public boolean update(Task task) {
-        boolean result = false;
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                result = session.createQuery("UPDATE Task "
+        Function<Session, Boolean> command = session ->
+                session.createQuery("UPDATE Task "
                                 + ("SET title=:title, description=:description ")
                                 + ("WHERE id=:id"))
                         .setParameter("title", task.getTitle())
                         .setParameter("description", task.getDescription())
                         .setParameter("id", task.getId())
                         .executeUpdate() != 0;
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return result;
+        return crudRepository.tx(command);
     }
 
     @Override
     public boolean completeTask(int id) {
-        boolean result = false;
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                result = session.createQuery("UPDATE Task "
+        Function<Session, Boolean> command = session ->
+                session.createQuery("UPDATE Task "
                                 + ("SET done=:done ")
                                 + ("WHERE id=:id"))
                         .setParameter("done", true)
                         .setParameter("id", id)
                         .executeUpdate() != 0;
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return result;
+        return crudRepository.tx(command);
     }
 
     @Override
     public boolean deleteById(int id) {
-        boolean result = false;
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                result = session.createQuery(
-                                "DELETE Task WHERE id = :fId")
+        Function<Session, Boolean> command = session ->
+                session.createQuery("DELETE Task WHERE id = :fId")
                         .setParameter("fId", id)
                         .executeUpdate() != 0;
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            }
-        }
-        return result;
+        return crudRepository.tx(command);
     }
 }
