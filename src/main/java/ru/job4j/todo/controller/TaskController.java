@@ -77,6 +77,16 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
+    @GetMapping("/complete/{id}")
+    public String completeTask(Model model, @PathVariable int id) {
+        var isUpdated = taskService.completeTask(id);
+        if (!isUpdated) {
+            model.addAttribute("message", "Task with this id is not found");
+            return "errors/404";
+        }
+        return "redirect:/tasks";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable int id) {
         var isDeleted = taskService.deleteById(id);

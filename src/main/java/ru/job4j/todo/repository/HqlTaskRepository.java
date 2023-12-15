@@ -35,7 +35,7 @@ public class HqlTaskRepository implements TaskRepository {
         try (Session session = sf.openSession()) {
             try {
                 session.beginTransaction();
-                task = Optional.of(session.get(Task.class, id));
+                task = Optional.ofNullable(session.get(Task.class, id));
                 session.getTransaction().commit();
             } catch (Exception e) {
                 session.getTransaction().rollback();
@@ -95,12 +95,31 @@ public class HqlTaskRepository implements TaskRepository {
             try {
                 session.beginTransaction();
                 result = session.createQuery("UPDATE Task "
-                                + ("SET title=:title, description=:description, done=:done ")
+                                + ("SET title=:title, description=:description ")
                                 + ("WHERE id=:id"))
                         .setParameter("title", task.getTitle())
                         .setParameter("description", task.getDescription())
-                        .setParameter("done", task.isDone())
                         .setParameter("id", task.getId())
+                        .executeUpdate() != 0;
+                session.getTransaction().commit();
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean completeTask(int id) {
+        boolean result = false;
+        try (Session session = sf.openSession()) {
+            try {
+                session.beginTransaction();
+                result = session.createQuery("UPDATE Task "
+                                + ("SET done=:done ")
+                                + ("WHERE id=:id"))
+                        .setParameter("done", true)
+                        .setParameter("id", id)
                         .executeUpdate() != 0;
                 session.getTransaction().commit();
             } catch (Exception e) {

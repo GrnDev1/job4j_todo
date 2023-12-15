@@ -10,6 +10,8 @@ public interface TaskRepository {
 
     boolean update(Task task);
 
+    boolean completeTask(int id);
+
     boolean deleteById(int id);
 
     List<Task> findAll();

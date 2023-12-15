@@ -13,20 +13,25 @@ A simple to do list app to manage your tasks
 
 ### Used technologies:
 * Java 17
-* Maven
-* PostgreSQL
-* Spring Boot
-* Lombok
-* Junit 5
-* AssertJ
-* Mockito
-* Liquibase
-* Hibernate
-* H2database
-* Thymeleaf
-* Bootstrap
-* Checkstyle
-* JoCoCO
+* Maven 3.9.5
+* PostgreSQL 16
+* Spring Boot 2.7.3
+* Lombok 1.18.22
+* Junit 5.8.2
+* AssertJ 3.22.0
+* Mockito 4.5.1
+* Liquibase 4.15.0
+* Hibernate 5.6.11.Final
+* H2database 2.1.214
+* Thymeleaf 2.7.3
+* Bootstrap 4.1.3
+* Checkstyle 10.12.5
+* JoCoCO 0.8.7
+
+### Environment Requirements:
+* JDK 17
+* Maven 3.9.5
+* PostgreSQL 16
 
 ### How to run the project:
 
