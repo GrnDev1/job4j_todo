@@ -1,10 +1,9 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
@@ -12,9 +11,9 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
+@Slf4j
 public class HqlUserRepository implements UserRepository {
     private final SessionFactory sf;
-    private static final Logger LOG = LoggerFactory.getLogger(HqlUserRepository.class);
 
     @Override
     public Optional<User> save(User user) {
@@ -26,7 +25,7 @@ public class HqlUserRepository implements UserRepository {
                 return Optional.of(user);
             } catch (Exception e) {
                 session.getTransaction().rollback();
-                LOG.error("User with this mail already exists", e);
+                log.error("User with this mail already exists", e);
             }
         }
         return Optional.empty();
