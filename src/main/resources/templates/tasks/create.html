@@ -8,6 +8,11 @@
     <header th:insert="blocks/header :: header"></header>
     <div class="container mt-4">
         <form class="mt-3" th:action="@{/tasks/create}" method="post">
+            <input type="hidden" name="user.id" th:value="${user.id}"/>
+            <input type="hidden" name="user.name" th:value="${user.name}"/>
+            <input type="hidden" name="user.login" th:value="${user.login}"/>
+            <input type="hidden" name="user.login" th:value="${user.login}"/>
+            <input type="hidden" name="user.password" th:value="${user.password}"/>
             <div class="mb-3">
                 <label for="name" class="form-label"><b>Title</b></label>
                 <input type="text" class="form-control" id="name" name="title"

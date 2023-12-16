@@ -30,9 +30,10 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th style="width: 33%;">Status</th>
-                    <th style="width: 33%;">Title</th>
-                    <th style="width: 33%;">Creation date</th>
+                    <th style="width: 25%;">Status</th>
+                    <th style="width: 25%;">Title</th>
+                    <th style="width: 25%;">Creation date</th>
+                    <th style="width: 25%;">User</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -43,6 +44,7 @@
                            th:href="@{/tasks/{taskId}(taskId=${task.getId()})}"> </a>
                     </td>
                     <td th:text="${task.getCreated()}"></td>
+                    <td th:text="${task.getUser().name}"></td>
                 </tr>
                 </tbody>
             </table>

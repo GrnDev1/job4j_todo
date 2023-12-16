@@ -20,4 +20,7 @@ public class Task {
     private String description;
     private LocalDateTime created = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     private boolean done;
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
 }
