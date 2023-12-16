@@ -3,6 +3,7 @@ package ru.job4j.todo.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -66,16 +67,20 @@ public class CrudRepository {
     }
 
     public <T> T tx(Function<Session, T> command) {
-        try (Session session = sf.openSession()) {
-            try {
-                session.beginTransaction();
-                T result = command.apply(session);
-                session.getTransaction().commit();
-                return result;
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-                throw e;
+        Session session = sf.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            T rsl = command.apply(session);
+            transaction.commit();
+            return rsl;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
+            throw e;
+        } finally {
+            session.close();
         }
     }
 }
