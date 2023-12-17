@@ -6,6 +6,7 @@ import org.springframework.ui.ConcurrentModel;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,7 +85,7 @@ class TaskControllerTest {
         task1.setDone(true);
         var taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
         when(taskService.save(taskArgumentCaptor.capture())).thenReturn(task1);
-        var view = taskController.create(task1);
+        var view = taskController.create(task1, mock(HttpSession.class));
         var actualTask = taskArgumentCaptor.getValue();
 
         assertThat(view).isEqualTo("redirect:/tasks");
