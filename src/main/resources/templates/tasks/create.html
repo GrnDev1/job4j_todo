@@ -19,7 +19,13 @@
                           placeholder="Do a very important task"></textarea>
             </div>
             <div class="row">
-                <div class="col-8"></div>
+                <div class="col-2">
+                    <label for="priority"><b>Priority</b></label>
+                    <select class="form-control" id="priority" name="priority.id">
+                        <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
+                    </select>
+                </div>
+                <div class="col-6"></div>
                 <div class="col-2">
                     <a class="btn btn-danger w-100" th:href="@{/tasks}">Cancel</a>
                 </div>

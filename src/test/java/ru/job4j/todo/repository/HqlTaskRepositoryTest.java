@@ -21,6 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class HqlTaskRepositoryTest {
     private static TaskRepository taskRepository;
     private static CrudRepository crudRepository;
+    private static PriorityRepository priorityRepository;
     static User user;
 
     @BeforeAll
@@ -31,6 +32,7 @@ class HqlTaskRepositoryTest {
         crudRepository = new CrudRepository(sf);
         taskRepository = new HqlTaskRepository(crudRepository);
         UserRepository userRepository = new HqlUserRepository(crudRepository);
+        priorityRepository = new HqlPriorityRepository(crudRepository);
         user = new User();
         user.setName("roman");
         user.setLogin("roman@mail.ru");
@@ -133,6 +135,7 @@ class HqlTaskRepositoryTest {
         task2.setId(savedTask1.getId());
         task2.setTitle("Task2");
         task2.setUser(user);
+        task2.setPriority(priorityRepository.findAll().get(0));
         var isUpdated = taskRepository.update(task2);
         var updatedTask = taskRepository.findById(task2.getId()).get();
         assertThat(isUpdated).isTrue();
@@ -145,6 +148,7 @@ class HqlTaskRepositoryTest {
         task1.setId(1);
         task1.setTitle("Task1");
         task1.setUser(user);
+        task1.setPriority(priorityRepository.findAll().get(0));
         var isUpdated = taskRepository.update(task1);
         assertThat(isUpdated).isFalse();
     }

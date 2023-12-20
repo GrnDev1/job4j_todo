@@ -25,7 +25,7 @@ public class HqlTaskRepository implements TaskRepository {
     @Override
     public Optional<Task> findById(int id) {
         return crudRepository.optional(
-                "from Task where id = :fId", Task.class,
+                "from Task f JOIN FETCH f.priority where f.id = :fId", Task.class,
                 Map.of("fId", id)
         );
     }
@@ -50,10 +50,11 @@ public class HqlTaskRepository implements TaskRepository {
     public boolean update(Task task) {
         Function<Session, Boolean> command = session ->
                 session.createQuery("UPDATE Task "
-                                + ("SET title=:title, description=:description ")
+                                + ("SET title=:title, description=:description, priority.id =:Id ")
                                 + ("WHERE id=:id"))
                         .setParameter("title", task.getTitle())
                         .setParameter("description", task.getDescription())
+                        .setParameter("Id", task.getPriority().getId())
                         .setParameter("id", task.getId())
                         .executeUpdate() != 0;
         return crudRepository.tx(command);

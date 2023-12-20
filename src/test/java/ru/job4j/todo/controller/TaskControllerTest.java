@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ui.ConcurrentModel;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
@@ -16,7 +17,8 @@ import static org.mockito.Mockito.when;
 
 class TaskControllerTest {
     private final TaskService taskService = mock(TaskService.class);
-    private final TaskController taskController = new TaskController(taskService);
+    private final PriorityService priorityService = mock(PriorityService.class);
+    private final TaskController taskController = new TaskController(taskService, priorityService);
 
     @Test
     public void whenRequestTaskListPageThenGetPageWithAllTasks() {
@@ -75,7 +77,8 @@ class TaskControllerTest {
 
     @Test
     public void whenRequestTaskCreationPageThenGetCreatePage() {
-        assertThat(taskController.getCreationPage()).isEqualTo("tasks/create");
+        var model = new ConcurrentModel();
+        assertThat(taskController.getCreationPage(model)).isEqualTo("tasks/create");
     }
 
     @Test
