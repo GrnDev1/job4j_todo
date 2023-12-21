@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ui.ConcurrentModel;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
@@ -18,7 +19,8 @@ import static org.mockito.Mockito.when;
 class TaskControllerTest {
     private final TaskService taskService = mock(TaskService.class);
     private final PriorityService priorityService = mock(PriorityService.class);
-    private final TaskController taskController = new TaskController(taskService, priorityService);
+    private final CategoryService categoryService = mock(CategoryService.class);
+    private final TaskController taskController = new TaskController(taskService, priorityService, categoryService);
 
     @Test
     public void whenRequestTaskListPageThenGetPageWithAllTasks() {
@@ -88,7 +90,7 @@ class TaskControllerTest {
         task1.setDone(true);
         var taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
         when(taskService.save(taskArgumentCaptor.capture())).thenReturn(task1);
-        var view = taskController.create(task1, mock(HttpSession.class));
+        var view = taskController.create(task1, mock(HttpSession.class), List.of(1, 2, 3));
         var actualTask = taskArgumentCaptor.getValue();
 
         assertThat(view).isEqualTo("redirect:/tasks");
@@ -149,7 +151,7 @@ class TaskControllerTest {
         var taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
         when(taskService.update(taskArgumentCaptor.capture())).thenReturn(true);
         var model = new ConcurrentModel();
-        var view = taskController.update(task1, model);
+        var view = taskController.update(task1, model, List.of(1, 2, 3));
         var actualTask = taskArgumentCaptor.getValue();
 
         assertThat(view).isEqualTo("redirect:/tasks");
@@ -162,7 +164,7 @@ class TaskControllerTest {
         task1.setId(1);
         task1.setDone(true);
         var model = new ConcurrentModel();
-        var view = taskController.update(task1, model);
+        var view = taskController.update(task1, model, List.of(1, 2, 3));
         var actualExceptionMessage = model.getAttribute("message");
         assertThat(view).isEqualTo("errors/404");
         assertThat(actualExceptionMessage).isEqualTo("Task with this id is not found");

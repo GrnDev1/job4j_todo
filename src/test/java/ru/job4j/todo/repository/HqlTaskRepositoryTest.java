@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 
@@ -23,6 +24,7 @@ class HqlTaskRepositoryTest {
     private static CrudRepository crudRepository;
     private static PriorityRepository priorityRepository;
     static User user;
+    static List<Category> categories;
 
     @BeforeAll
     public static void initRepositories() {
@@ -33,11 +35,14 @@ class HqlTaskRepositoryTest {
         taskRepository = new HqlTaskRepository(crudRepository);
         UserRepository userRepository = new HqlUserRepository(crudRepository);
         priorityRepository = new HqlPriorityRepository(crudRepository);
+        CategoryRepository categoryRepository = new HqlCategoryRepository(crudRepository);
+
         user = new User();
         user.setName("roman");
         user.setLogin("roman@mail.ru");
         user.setPassword("password");
         userRepository.save(user);
+        categories = categoryRepository.findAllById(List.of(1, 2, 3));
     }
 
     @AfterEach
@@ -136,6 +141,7 @@ class HqlTaskRepositoryTest {
         task2.setTitle("Task2");
         task2.setUser(user);
         task2.setPriority(priorityRepository.findAll().get(0));
+        task2.setCategories(categories);
         var isUpdated = taskRepository.update(task2);
         var updatedTask = taskRepository.findById(task2.getId()).get();
         assertThat(isUpdated).isTrue();
@@ -149,6 +155,7 @@ class HqlTaskRepositoryTest {
         task1.setTitle("Task1");
         task1.setUser(user);
         task1.setPriority(priorityRepository.findAll().get(0));
+        task1.setCategories(categories);
         var isUpdated = taskRepository.update(task1);
         assertThat(isUpdated).isFalse();
     }
