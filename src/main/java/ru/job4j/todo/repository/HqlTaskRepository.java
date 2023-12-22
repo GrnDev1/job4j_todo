@@ -52,8 +52,9 @@ public class HqlTaskRepository implements TaskRepository {
             crudRepository.run(session -> session.update(task));
             return true;
         } catch (Exception e) {
-            return false;
+            log.error("Task with this id is not found", e);
         }
+        return false;
     }
 
     @Override

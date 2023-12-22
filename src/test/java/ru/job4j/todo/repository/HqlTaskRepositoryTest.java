@@ -14,6 +14,7 @@ import ru.job4j.todo.model.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
@@ -24,7 +25,7 @@ class HqlTaskRepositoryTest {
     private static CrudRepository crudRepository;
     private static PriorityRepository priorityRepository;
     static User user;
-    static List<Category> categories;
+    static Set<Category> categories;
 
     @BeforeAll
     public static void initRepositories() {
