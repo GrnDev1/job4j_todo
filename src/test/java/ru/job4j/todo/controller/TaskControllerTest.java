@@ -3,9 +3,11 @@ package ru.job4j.todo.controller;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ui.ConcurrentModel;
+import ru.job4j.todo.dto.TaskDto;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
+import ru.job4j.todo.service.TaskDtoService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
@@ -18,20 +20,23 @@ import static org.mockito.Mockito.when;
 
 class TaskControllerTest {
     private final TaskService taskService = mock(TaskService.class);
+    private final TaskDtoService taskDtoService = mock(TaskDtoService.class);
     private final PriorityService priorityService = mock(PriorityService.class);
     private final CategoryService categoryService = mock(CategoryService.class);
-    private final TaskController taskController = new TaskController(taskService, priorityService, categoryService);
+    private final TaskController taskController = new TaskController(taskService, taskDtoService, priorityService, categoryService);
 
     @Test
     public void whenRequestTaskListPageThenGetPageWithAllTasks() {
-        var task1 = new Task();
-        task1.setId(1);
-        task1.setTitle("task1");
-        var task2 = new Task();
-        task2.setId(2);
-        task2.setTitle("task2");
-        var expectedTasks = List.of(task1, task2);
-        when(taskService.findAll()).thenReturn(expectedTasks);
+        var taskDto1 = TaskDto.of()
+                .id(1)
+                .status("Completed")
+                .build();
+        var taskDto2 = TaskDto.of()
+                .id(2)
+                .status("In Progress")
+                .build();
+        var expectedTasks = List.of(taskDto1, taskDto2);
+        when(taskDtoService.findAll()).thenReturn(expectedTasks);
 
         var model = new ConcurrentModel();
         var view = taskController.getAll(model);
@@ -43,14 +48,16 @@ class TaskControllerTest {
 
     @Test
     public void whenRequestTaskListPageThenGetPageWithDoneTasks() {
-        var task1 = new Task();
-        task1.setId(1);
-        task1.setDone(true);
-        var task2 = new Task();
-        task2.setId(2);
-        task2.setDone(true);
-        var expectedTasks = List.of(task1, task2);
-        when(taskService.findByDone()).thenReturn(expectedTasks);
+        var taskDto1 = TaskDto.of()
+                .id(1)
+                .status("Completed")
+                .build();
+        var taskDto2 = TaskDto.of()
+                .id(2)
+                .status("In Progress")
+                .build();
+        var expectedTasks = List.of(taskDto1, taskDto2);
+        when(taskDtoService.findByDone()).thenReturn(expectedTasks);
 
         var model = new ConcurrentModel();
         var view = taskController.getDone(model);
@@ -62,12 +69,16 @@ class TaskControllerTest {
 
     @Test
     public void whenRequestTaskListPageThenGetPageWithNewTasks() {
-        var task1 = new Task();
-        task1.setId(1);
-        var task2 = new Task();
-        task2.setId(2);
-        var expectedTasks = List.of(task1, task2);
-        when(taskService.findByNew()).thenReturn(expectedTasks);
+        var taskDto1 = TaskDto.of()
+                .id(1)
+                .status("Completed")
+                .build();
+        var taskDto2 = TaskDto.of()
+                .id(2)
+                .status("In Progress")
+                .build();
+        var expectedTasks = List.of(taskDto1, taskDto2);
+        when(taskDtoService.findByNew()).thenReturn(expectedTasks);
 
         var model = new ConcurrentModel();
         var view = taskController.getNew(model);
@@ -99,16 +110,17 @@ class TaskControllerTest {
 
     @Test
     public void whenRequestTaskGetByIdThenGetPageWithTask() {
-        var task1 = new Task();
-        task1.setId(1);
-        task1.setDone(true);
-        when(taskService.findById(1)).thenReturn(Optional.of(task1));
+        var taskDto1 = TaskDto.of()
+                .id(1)
+                .status("Completed")
+                .build();
+        when(taskDtoService.findById(1)).thenReturn(Optional.of(taskDto1));
         var model = new ConcurrentModel();
         var view = taskController.getById(model, 1);
         var actualTask = model.getAttribute("task");
 
         assertThat(view).isEqualTo("tasks/one");
-        assertThat(actualTask).usingRecursiveComparison().isEqualTo(task1);
+        assertThat(actualTask).usingRecursiveComparison().isEqualTo(taskDto1);
     }
 
     @Test

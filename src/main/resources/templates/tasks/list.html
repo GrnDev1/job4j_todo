@@ -38,13 +38,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="task: ${tasks}">
-                    <td th:text="${task.isDone()}"></td>
+                    <td th:text="${task.status}"></td>
                     <td>
                         <a th:text="${task.getTitle()}"
                            th:href="@{/tasks/{taskId}(taskId=${task.getId()})}"> </a>
                     </td>
                     <td th:text="${task.getCreated()}"></td>
-                    <td th:text="${task.getUser().name}"></td>
+                    <td th:text="${task.username}"></td>
                 </tr>
                 </tbody>
             </table>

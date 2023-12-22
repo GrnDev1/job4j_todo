@@ -10,4 +10,6 @@
     <include file="scripts/005_ddl_create_categories_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/006_ddl_create_participates_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/007_dml_insert_categories.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/008_ddl_add_user_zone_in_users.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/009_ddl_update_created_in_tasks.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

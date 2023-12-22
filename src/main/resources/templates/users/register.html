@@ -27,6 +27,13 @@
                         <label for="password" class="form-label"><b>Password</b></label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="zone" class="form-label"><b>Time Zone</b></label>
+                        <select class="form-control" id="zone" name="timeZone">
+                            <option th:each="zone : ${zones}" th:value="${zone.getID()}" th:selected="${zone eq defaultZone}"
+                                    th:text="${zone.getID() + ':'  + zone.getDisplayName()}"></option>
+                        </select>
+                    </div>
                     <div class="mb-3 row">
                         <div class="col-7">
                             <p>Already have an account? <span><a th:href="@{/users/login}">Log in here</a></span>

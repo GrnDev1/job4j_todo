@@ -15,6 +15,7 @@ import ru.job4j.todo.model.User;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
@@ -42,6 +43,7 @@ class HqlTaskRepositoryTest {
         user.setName("roman");
         user.setLogin("roman@mail.ru");
         user.setPassword("password");
+        user.setTimeZone(TimeZone.getDefault().getID());
         userRepository.save(user);
         categories = categoryRepository.findAllById(List.of(1, 2, 3));
     }

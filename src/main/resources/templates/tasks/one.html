@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td th:text="${task.isDone()}"></td>
+                        <td th:text="${task.status}"></td>
                         <td th:text="${task.getTitle()}"></td>
                         <td style="max-width: 100px" th:text="${task.getDescription()}"></td>
                         <td th:text="${task.getCreated()}"></td>
@@ -29,13 +29,13 @@
                 </table>
             </div>
             <div class="row">
-                <div class="col-6" th:if="${!task.done}"></div>
+                <div class="col-6" th:if="${task.status eq 'In Progress'}"></div>
 
-                <div class="col-2" th:if="${!task.done}">
+                <div class="col-2" th:if="${task.status eq 'In Progress'}">
                     <a class="btn btn-success w-100" th:href="@{/tasks/complete/{id}(id=${task.id})}">Done</a>
                 </div>
 
-                <div class="col-8" th:if="${task.done}"></div>
+                <div class="col-8" th:if="${task.status eq 'Completed'}"></div>
 
                 <div class="col-2">
                     <a class="btn btn-primary w-100" th:href="@{'/tasks/' + ${task.id} + '/edit'}">Edit</a>
