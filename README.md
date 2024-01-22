@@ -3,9 +3,12 @@ A simple to do list app to manage your tasks
 
 ### The main logic of the App:
 
+* User registration with time zone, log in, log out
 * Displaying all / completed / new tasks
 * When you click on a task, you are taken to a page with a detailed description of the task
 * Edit / update / delete task
+* Selection of task urgency priority
+* Selection the type of task category
 * If you clicked on the "done" button, the task is moved to the completed state
 * The "edit" button takes the user to a separate page for editing
 * The "delete" button deletes the task and goes to the list of all tasks
@@ -13,20 +16,21 @@ A simple to do list app to manage your tasks
 
 ### Used technologies:
 * Java 17
+* Spring Boot 2.7.3
+* Hibernate 5.6.11.Final
+* Mapstruct 1.5.5
 * Maven 3.9.5
 * PostgreSQL 16
-* Spring Boot 2.7.3
 * Lombok 1.18.22
 * Junit 5.8.2
 * AssertJ 3.22.0
 * Mockito 4.5.1
 * Liquibase 4.15.0
-* Hibernate 5.6.11.Final
-* H2database 2.1.214
 * Thymeleaf 2.7.3
 * Bootstrap 4.1.3
-* Checkstyle 10.12.5
 * JoCoCO 0.8.7
+* H2database 2.1.214
+* Checkstyle 10.12.5
 
 ### Environment Requirements:
 * JDK 17
@@ -49,6 +53,14 @@ A simple to do list app to manage your tasks
 ### Home page
 
 ![home_page.png](img/home_page.png)
+
+### Sign up page
+
+![reg_page.png](img/reg_page.png)
+
+### Login page
+
+![login_page.png](img/login_page.png)
 
 ### All tasks
 
